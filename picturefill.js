@@ -179,11 +179,12 @@
       }
     }
 
-    function mql_listener(picture_elements) {
+    function mql_listener(picture_elements, media_query) {
       var self = function(mql) {
         if(mql.matches) {
           for(var i = 0, il = picture_elements.length; i < il; i++) {
-            picture_elements[i].setMedia(mql.media, options.prune);
+            //We cannot use mql.media because not guaranteed to be the same as the media query string
+            picture_elements[i].setMedia(media_query, options.prune);
           }
           mql.removeListener(self);
         }
@@ -196,9 +197,9 @@
     for(var media_query in mqls) {
       var mql = w.matchMedia(media_query);
       if(mql.matches) {
-        matching_mqls.push(mql.media);
+        matching_mqls.push(media_query);
       }
-      mql.addListener(mql_listener(mqls[media_query]));
+      mql.addListener(mql_listener(mqls[media_query], media_query));
     }
 
     for(var i = 0, il = picture_elements.length; i < il; i++) {
